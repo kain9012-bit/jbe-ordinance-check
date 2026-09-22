@@ -1,14 +1,17 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ExternalLink, FileText } from 'lucide-react';
 import { Badge } from './Ui';
 import { LEVEL_TONE, type Group } from '../types';
+
+/** 국가법령정보센터 주소에는 한글이 그대로 들어간다. 브라우저가 알아서 인코딩하지만 명시해 둔다. */
+const href = (u: string) => encodeURI(u);
 
 /**
  * 자치법규 한 건. 안에 어긋난 인용을 줄 단위로 늘어놓는다.
  *
- * 한 줄은 '지금 적힌 인용 → 바꿀 곳' 한 쌍이 중심이다. 왜 어긋났는지와 근거 개정은
- * 그 아래 작은 글씨로 붙인다. 부서가 표를 보고 바로 개정안을 쓰는 것이 목적이라,
- * 판정 문구보다 고칠 문자열이 먼저 보여야 한다.
+ * 한 줄은 '지금 적힌 인용 → 바꿀 곳' 한 쌍이 중심이다. 그 아래 왜 어긋났는지와 근거 개정을 붙인다.
+ * 읽는 사람이 판정을 믿고 넘어가지 않도록, 자치법규 원문과 현행 조문으로 바로 가는 링크를 같이 둔다.
+ * 판정만 있고 확인할 길이 없으면 그대로 옮겨 적는 수밖에 없고, 그건 이 화면이 노리는 바가 아니다.
  */
 export const IssueCard: React.FC<{ group: Group }> = ({ group }) => (
   <article className="jbe-card bg-white rounded-lg border border-slate-200 overflow-hidden">
@@ -19,6 +22,15 @@ export const IssueCard: React.FC<{ group: Group }> = ({ group }) => (
         <span>{group.kind}</span>
         <Badge tone="blue">{group.dept}</Badge>
         <span className="tabular-nums">최종 공포 {group.date}</span>
+        <a
+          href={href(group.items[0].ordUrl)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-300 font-bold text-slate-600 hover:border-blue-600 hover:text-blue-700"
+        >
+          <FileText className="w-3 h-3" aria-hidden="true" />
+          자치법규 원문
+        </a>
       </span>
     </div>
     {group.items.map((x, i) => (
@@ -42,6 +54,22 @@ export const IssueCard: React.FC<{ group: Group }> = ({ group }) => (
             {x.issue}
             <span className="ml-1.5 whitespace-nowrap text-slate-400">· {x.basis}</span>
           </p>
+          {x.links.length > 0 && (
+            <p className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+              {x.links.map((l) => (
+                <a
+                  key={l.url}
+                  href={href(l.url)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-bold text-slate-600 hover:text-blue-700 underline decoration-slate-300 underline-offset-2"
+                >
+                  <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  {l.label}
+                </a>
+              ))}
+            </p>
+          )}
         </div>
       </div>
     ))}

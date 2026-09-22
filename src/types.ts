@@ -20,6 +20,10 @@ export type Issue = {
   fix: string;
   /** 근거가 된 상위법 개정 */
   basis: string;
+  /** 자치법규 원문(국가법령정보센터) 주소 */
+  ordUrl: string;
+  /** 바꿔 넣을 현행 조문으로 가는 링크. 없을 수도 있다(폐지·확인 필요 건) */
+  links: { label: string; url: string }[];
 };
 
 export type Level = '정비 필요' | '시행 전 정비' | '표기 정비';
@@ -64,4 +68,16 @@ export const AS_OF = {
   cites: 2009,
   /** 사람이 문맥을 보고 판정한 후보 수 */
   reviewed: 131,
+  /** 조문 번호까지 적힌 인용 수 */
+  withArt: 1526,
+  /** 법령명만 들고 조문 번호가 없는 인용 수 */
+  nameOnly: 483,
+};
+
+/** 화면 위쪽 탭 */
+export type Tab = 'list' | 'method';
+
+export const TAB_LABEL: Record<Tab, string> = {
+  list: '정비 대상',
+  method: '점검 방법과 한계',
 };
