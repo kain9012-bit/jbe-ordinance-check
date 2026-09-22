@@ -40,7 +40,7 @@ export const Header: React.FC<{ tab: Tab; onTab: (t: Tab) => void }> = ({ tab, o
             <span className="block text-xs text-slate-500">전북특별자치도교육청</span>
           </span>
         </div>
-        <ul role="tablist" className="flex items-center gap-6">
+        <ul role="tablist" className="flex items-center gap-6 sm:ml-auto">
           {TABS.map((t) => (
             <li key={t} role="presentation">
               <button
